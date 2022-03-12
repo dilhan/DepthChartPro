@@ -1,3 +1,4 @@
+using DepthChartPro.API.Middlewares;
 using DepthChartPro.BL.Interfaces;
 using DepthChartPro.BL.Services;
 using DepthChartPro.DAL.DataAccess;
@@ -34,7 +35,10 @@ namespace DepthChartPro.API
             services.AddScoped<IDepthChartRepository, DepthChartRepository>();
             services.AddTransient<IDepthChartService, DepthChartService>();
 
-            services.AddControllers();
+            services.AddControllers(options =>
+            {
+                options.Filters.Add<ErrorHandlingMiddleware>();
+            }); ;
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "DepthChartPro.API", Version = "v1" });
