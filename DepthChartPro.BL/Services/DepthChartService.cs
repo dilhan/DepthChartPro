@@ -32,12 +32,9 @@ namespace DepthChartPro.BL.Services
                 var posDepth = (int)positionDepth;
                 if (depthChart.PositionDepthQueueList.FindAll(dc => dc.Position.Code == position && dc.PositionDepth == posDepth).Count > 0)
                 {
-                    foreach (var depthChartItem in depthChart.PositionDepthQueueList.FindAll(dc => dc.Position.Code == position))
+                    foreach (var depthChartItem in depthChart.PositionDepthQueueList.FindAll(dc => dc.Position.Code == position && dc.PositionDepth >= posDepth))
                     {
-                        if (posDepth >= depthChartItem.PositionDepth)
-                        {
-                            depthChartItem.PositionDepth++;
-                        }
+                        depthChartItem.PositionDepth++;
                     }
                 }
                 await _depthChartRepository.AddPlayerToDepthChart(position, playerId, posDepth);
