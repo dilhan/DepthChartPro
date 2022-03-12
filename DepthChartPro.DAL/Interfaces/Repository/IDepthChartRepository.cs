@@ -1,5 +1,4 @@
 ﻿using DepthChartPro.DAL.Models;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace DepthChartPro.DAL.Interfaces.Repository
@@ -13,21 +12,13 @@ namespace DepthChartPro.DAL.Interfaces.Repository
         /// <param name="playerId"></param>
         /// <param name="positionDepth"></param>
         /// <returns></returns>
-        public Task AddPlayerToDepthChart(string position, int playerId, int? positionDepth);
+        public Task AddPlayerToDepthChart(string position, int playerId, int positionDepth);
         /// <summary>
         /// Remove player from Depth Chart
         /// </summary>
-        /// <param name="position"></param>
-        /// <param name="playerId"></param>
+        /// <param name="removeIndex"></param>
         /// <returns>Player</returns>
-        public Task<Player> RemovePlayerFromDepthChart(string position, int playerId);
-        /// <summary>
-        /// Get all backup players
-        /// </summary>
-        /// <param name="position"></param>
-        /// <param name="playerId"></param>
-        /// <returns>IEnumerable<Player></returns>
-        public Task<IEnumerable<Player>> GetBackups(string position, int playerId);
+        public Task RemovePlayerFromDepthChart(int removeIndex);
         /// <summary>
         /// Get full Depth Chart
         /// </summary>
