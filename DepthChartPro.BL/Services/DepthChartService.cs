@@ -2,6 +2,7 @@
 using DepthChartPro.DAL.Interfaces.Repository;
 using DepthChartPro.DAL.Models;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace DepthChartPro.BL.Services
 {
@@ -14,17 +15,17 @@ namespace DepthChartPro.BL.Services
             _depthChartRepository = depthChartRepository;
         }
 
-        public Player RemovePlayerFromDepthChart(string position, int playerId)
+        public async Task<Player> RemovePlayerFromDepthChart(string position, int playerId)
         {
-            return _depthChartRepository.RemovePlayerFromDepthChart(position, playerId);
+            return await _depthChartRepository.RemovePlayerFromDepthChart(position, playerId);
         }
-        public IEnumerable<Player> GetBackups(string position, int playerId)
+        public async Task<IEnumerable<Player>> GetBackups(string position, int playerId)
         {
-            return _depthChartRepository.GetBackups(position, playerId);
+            return await _depthChartRepository.GetBackups(position, playerId);
         }
-        public DepthChart GetFullDepthChart()
+        public async Task<DepthChart> GetFullDepthChart()
         {
-            return _depthChartRepository.GetFullDepthChart();
+            return await _depthChartRepository.GetFullDepthChart();
         }
 
         

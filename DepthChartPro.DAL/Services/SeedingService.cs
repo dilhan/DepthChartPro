@@ -1,11 +1,10 @@
 ﻿using DepthChartPro.DAL.DataAccess;
-using DepthChartPro.DAL.Interfaces;
 using DepthChartPro.DAL.Models;
 using System.Linq;
 
 namespace DepthChartPro.DAL.Services
 {
-    public class SeedingService : ISeedingService
+    public class SeedingService 
     {
         private readonly DepthChartContext _context;
         public SeedingService(DepthChartContext context)
