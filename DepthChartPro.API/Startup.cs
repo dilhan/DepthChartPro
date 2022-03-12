@@ -65,6 +65,9 @@ namespace DepthChartPro.API
             {
                 endpoints.MapControllers();
             });
+
+            app.UseExceptionHandler("/Error");
+
         }
     }
 }

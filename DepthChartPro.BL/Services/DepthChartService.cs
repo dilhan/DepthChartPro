@@ -15,6 +15,10 @@ namespace DepthChartPro.BL.Services
             _depthChartRepository = depthChartRepository;
         }
 
+        public async Task AddPlayerToDepthChart(string position, int playerId, int? positionDepth)
+        {
+             await _depthChartRepository.AddPlayerToDepthChart(position, playerId, positionDepth);
+        }
         public async Task<Player> RemovePlayerFromDepthChart(string position, int playerId)
         {
             return await _depthChartRepository.RemovePlayerFromDepthChart(position, playerId);

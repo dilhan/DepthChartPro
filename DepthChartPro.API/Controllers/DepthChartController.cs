@@ -18,6 +18,22 @@ namespace DepthChartPro.API.Controllers
             _logger = logger;
         }
 
+        [Route("/AddPlayerToDepthChart/{position}/{playerId}")]
+        [HttpPut]
+        public async Task<IActionResult> AddPlayerToDepthChart(string position, int playerId)
+        {
+            await _depthChartService.AddPlayerToDepthChart(position, playerId,null);
+            return Ok();
+        }
+
+        [Route("/AddPlayerToDepthChart/{position}/{playerId}/{positionDepth?}")]
+        [HttpPut]
+        public async Task<IActionResult> AddPlayerToDepthChart(string position, int playerId, int positionDepth)
+        {
+            await _depthChartService.AddPlayerToDepthChart(position, playerId, positionDepth);
+            return Ok();
+        }
+
         [Route("/RemovePlayerFromDepthChart/{position}/{playerId}")]
         [HttpDelete]
         public async Task<IActionResult> RemovePlayerFromDepthChart(string position, int playerId)

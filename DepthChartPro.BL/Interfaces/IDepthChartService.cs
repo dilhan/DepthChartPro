@@ -7,6 +7,14 @@ namespace DepthChartPro.BL.Interfaces
     public interface IDepthChartService
     {
         /// <summary>
+        /// Add player from Depth Chart
+        /// </summary>
+        /// <param name="position"></param>
+        /// <param name="playerId"></param>
+        /// <param name="positionDepth"></param>
+        /// <returns></returns>
+        public Task AddPlayerToDepthChart(string position, int playerId, int? positionDepth);
+        /// <summary>
         /// Removed player from Depth Chart
         /// </summary>
         /// <param name="position"></param>
