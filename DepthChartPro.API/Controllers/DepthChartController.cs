@@ -1,5 +1,4 @@
 ﻿using DepthChartPro.BL.Interfaces;
-using DepthChartPro.DAL.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
