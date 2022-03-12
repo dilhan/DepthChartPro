@@ -26,19 +26,17 @@ namespace DepthChartPro.BL.Services
             {
                 var lastpositionDepth = depthChart.PositionDepthQueueList.FindLast(dc => dc.Position.Code == position).PositionDepth + 1;
                 await _depthChartRepository.AddPlayerToDepthChart(position, playerId, lastpositionDepth);
+                return;
             }
-            else
+            var posDepth = (int)positionDepth;
+            if (depthChart.PositionDepthQueueList.FindAll(dc => dc.Position.Code == position && dc.PositionDepth == posDepth).Count > 0)
             {
-                var posDepth = (int)positionDepth;
-                if (depthChart.PositionDepthQueueList.FindAll(dc => dc.Position.Code == position && dc.PositionDepth == posDepth).Count > 0)
+                foreach (var depthChartItem in depthChart.PositionDepthQueueList.FindAll(dc => dc.Position.Code == position && dc.PositionDepth >= posDepth))
                 {
-                    foreach (var depthChartItem in depthChart.PositionDepthQueueList.FindAll(dc => dc.Position.Code == position && dc.PositionDepth >= posDepth))
-                    {
-                        depthChartItem.PositionDepth++;
-                    }
+                    depthChartItem.PositionDepth++;
                 }
-                await _depthChartRepository.AddPlayerToDepthChart(position, playerId, posDepth);
             }
+            await _depthChartRepository.AddPlayerToDepthChart(position, playerId, posDepth);
         }
         public async Task<Player> RemovePlayerFromDepthChart(string position, int playerId)
         {
