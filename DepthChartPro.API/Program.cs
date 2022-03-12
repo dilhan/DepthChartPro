@@ -21,6 +21,10 @@ namespace DepthChartPro.API
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
+                }).ConfigureLogging(logBuilder =>
+                {
+                    logBuilder.ClearProviders();
+                    logBuilder.AddDebug().AddConsole();
                 });
     }
 }

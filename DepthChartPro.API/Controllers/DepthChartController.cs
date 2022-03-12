@@ -1,6 +1,7 @@
 ﻿using DepthChartPro.BL.Interfaces;
 using DepthChartPro.DAL.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
 
 namespace DepthChartPro.API.Controllers
@@ -10,17 +11,19 @@ namespace DepthChartPro.API.Controllers
     public class DepthChartController : ControllerBase
     {
         private readonly IDepthChartService _depthChartService;
+        private readonly ILogger<DepthChartController> _logger;
 
-        public DepthChartController(IDepthChartService depthChartService)
+        public DepthChartController(IDepthChartService depthChartService, ILogger<DepthChartController> logger)
         {
             _depthChartService = depthChartService;
+            _logger = logger;
         }
 
         [Route("/RemovePlayerFromDepthChart/{position}/{playerId}")]
         [HttpDelete]
         public async Task<IActionResult> RemovePlayerFromDepthChart(string position, int playerId)
         {
-            var palyer = _depthChartService.RemovePlayerFromDepthChart(position, playerId);
+            var palyer = await _depthChartService.RemovePlayerFromDepthChart(position, playerId);
             return Ok(palyer);
         }
 
@@ -28,7 +31,7 @@ namespace DepthChartPro.API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetBackups(string position, int playerId)
         {
-            var backups = _depthChartService.GetBackups(position, playerId);
+            var backups = await _depthChartService.GetBackups(position, playerId);
             return Ok(backups);
         }
 
@@ -36,7 +39,7 @@ namespace DepthChartPro.API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetFullDepthChart()
         {
-           var depthChart = _depthChartService.GetFullDepthChart();
+           var depthChart = await _depthChartService.GetFullDepthChart();
             return Ok(depthChart);
         }
     }
