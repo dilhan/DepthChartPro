@@ -1,6 +1,7 @@
 ﻿using DepthChartPro.DAL.DataAccess;
 using DepthChartPro.DAL.Interfaces.Repository;
 using DepthChartPro.DAL.Models;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -16,7 +17,7 @@ namespace DepthChartPro.DAL.Repository
 
         public Player RemovePlayerFromDepthChart(string position, int playerId, int? sportId =1,int? TeamId =1)
         {
-            var depthChart = _context.DepthChart.Local.FirstOrDefault(dc=>dc.Sport.Id == sportId && dc.Team.Id == TeamId);
+            var depthChart = getDepthChart((int)sportId, (int)TeamId);
             if (depthChart.PositionDepthQueueList.Any(pq => pq.Position.Code == position && pq.Player.Number == playerId))
             {
                 var removeIndex = depthChart.PositionDepthQueueList.FindIndex(pq => pq.Position.Code == position && pq.Player.Number == playerId);
@@ -29,7 +30,7 @@ namespace DepthChartPro.DAL.Repository
         }
         public IEnumerable<Player> GetBackups(string postion, int playerId, int? sportId = 1, int? TeamId = 1)
         {
-            var depthChart = _context.DepthChart.Local.FirstOrDefault(dc => dc.Sport.Id == sportId && dc.Team.Id == TeamId);
+            var depthChart = getDepthChart((int)sportId, (int)TeamId);
             if (string.IsNullOrEmpty(postion) && depthChart.PositionDepthQueueList.Count(pq => pq.Position.Code == postion && pq.Player.Number == playerId) == 0) return Enumerable.Empty<Player>();
             var playerPostion = depthChart.PositionDepthQueueList.FirstOrDefault(pq => pq.Position.Code == postion && pq.Player.Number == playerId).PositionDepth;
             var backupPlayers = new List<Player>();
@@ -42,7 +43,19 @@ namespace DepthChartPro.DAL.Repository
 
         public DepthChart GetFullDepthChart(int? sportId = 1, int? TeamId = 1)
         {
-            return _context.DepthChart.Local.FirstOrDefault(dc => dc.Sport.Id == sportId && dc.Team.Id == TeamId);
+            return getDepthChart((int)sportId, (int)TeamId);
+        }
+
+        private DepthChart getDepthChart(int sportId, int TeamId )
+        {
+            return _context.DepthChart.
+               Include(dc => dc.PositionDepthQueueList)
+                   .ThenInclude(pc => pc.Position)
+               .Include(dc => dc.PositionDepthQueueList)
+                   .ThenInclude(pc => pc.Player)
+               .Include(dc => dc.Sport)
+               .Include(dc => dc.Team)
+            .FirstOrDefault(dc => dc.Sport.Id == sportId && dc.Team.Id == TeamId);
         }
 
     }

@@ -1,24 +1,16 @@
 using DepthChartPro.BL.Interfaces;
 using DepthChartPro.BL.Services;
 using DepthChartPro.DAL.DataAccess;
-using DepthChartPro.DAL.Interfaces;
 using DepthChartPro.DAL.Interfaces.Repository;
 using DepthChartPro.DAL.Repository;
 using DepthChartPro.DAL.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace DepthChartPro.API
 {
@@ -35,12 +27,10 @@ namespace DepthChartPro.API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<DepthChartContext>(options => options.UseInMemoryDatabase(databaseName:"DepthChartDB"));
-            //services.AddSingleton<SeedingService>();
-            // AddDbContext
             var sp = services.BuildServiceProvider();
             var dbContext = sp.GetRequiredService<DepthChartContext>();
-            SeedingService project = new SeedingService(dbContext);
-            services.AddSingleton(typeof(SeedingService), project);
+            SeedingService seedingService = new SeedingService(dbContext);
+            services.AddSingleton(typeof(SeedingService), seedingService);
             services.AddScoped<IDepthChartRepository, DepthChartRepository>();
             services.AddTransient<IDepthChartService, DepthChartService>();
 
