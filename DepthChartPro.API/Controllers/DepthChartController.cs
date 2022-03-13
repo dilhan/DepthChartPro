@@ -1,4 +1,5 @@
-﻿using DepthChartPro.BL.Interfaces;
+﻿using DepthChartPro.API.Models;
+using DepthChartPro.BL.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
@@ -18,19 +19,16 @@ namespace DepthChartPro.API.Controllers
             _logger = logger;
         }
 
-        [Route("/AddPlayerToDepthChart/{position}/{playerId}")]
-        [HttpPut]
-        public async Task<IActionResult> AddPlayerToDepthChart(string position, int playerId)
+        [Route("/AddPlayerToDepthChart")]
+        [HttpPost]
+        public async Task<IActionResult> AddPlayerToDepthChart([FromBody] AddPlayerModel addPlayerModel)
         {
-            await _depthChartService.AddPlayerToDepthChart(position, playerId,null);
-            return Ok();
-        }
+            if (addPlayerModel == null)
+                throw new System.ArgumentNullException("addPlayerModel", "Parameter is null or empty");
+            if (string.IsNullOrEmpty(addPlayerModel.position))
+                throw new System.ArgumentNullException("position", "Parameter is null or empty");
 
-        [Route("/AddPlayerToDepthChart/{position}/{playerId}/{positionDepth?}")]
-        [HttpPut]
-        public async Task<IActionResult> AddPlayerToDepthChart(string position, int playerId, int positionDepth)
-        {
-            await _depthChartService.AddPlayerToDepthChart(position, playerId, positionDepth);
+            await _depthChartService.AddPlayerToDepthChart(addPlayerModel.position, addPlayerModel.playerId, addPlayerModel.positionDepth);
             return Ok();
         }
 
@@ -38,6 +36,9 @@ namespace DepthChartPro.API.Controllers
         [HttpDelete]
         public async Task<IActionResult> RemovePlayerFromDepthChart(string position, int playerId)
         {
+            if (string.IsNullOrEmpty(position))
+                throw new System.ArgumentNullException("position", "Parameter is null or empty");
+
             var palyer = await _depthChartService.RemovePlayerFromDepthChart(position, playerId);
             return Ok(palyer);
         }
@@ -46,6 +47,9 @@ namespace DepthChartPro.API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetBackups(string position, int playerId)
         {
+            if (string.IsNullOrEmpty(position))
+                throw new System.ArgumentNullException("position", "Parameter is null or empty");
+
             var backups = await _depthChartService.GetBackups(position, playerId);
             return Ok(backups);
         }
