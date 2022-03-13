@@ -7,4 +7,5 @@ This document will guide you through the initial setup to get the `DepthChartPro
 - Microsoft.EntityFrameworkCore.InMemory
 - Microsoft.EntityFrameworkCore.Tools
 - Newtonsoft.Json
+- xunit
 
