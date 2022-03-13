@@ -57,7 +57,7 @@ namespace DepthChartPro.BL.Services
                 throw new System.ArgumentNullException("position", "Parameter is null or empty");
 
             var depthChart = await GetFullDepthChart();
-            if (string.IsNullOrEmpty(position) && depthChart.PositionDepthQueueList.Count(pq => pq.Position.Code == position && pq.Player.Number == playerId) == 0) return Enumerable.Empty<Player>();
+            if (depthChart.PositionDepthQueueList.Count(pq => pq.Position.Code == position && pq.Player.Number == playerId) <= 0) return Enumerable.Empty<Player>();
             var playerPostion = depthChart.PositionDepthQueueList.FirstOrDefault(pq => pq.Position.Code == position && pq.Player.Number == playerId).PositionDepth;
             var backupPlayers = new List<Player>();
             foreach (var posQueue in depthChart.PositionDepthQueueList.Where(pq => pq.Position.Code == position && pq.PositionDepth > playerPostion).ToList())

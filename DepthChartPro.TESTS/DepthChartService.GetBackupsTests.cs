@@ -4,15 +4,16 @@ using DepthChartPro.DAL.Models;
 using Moq;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
 namespace DepthChartPro.TESTS
 {
-    public class DepthChartServiceRemoveTests
+    public class DepthChartServiceGetBackupsTests
     {
         private Mock<IDepthChartRepository> _mockDepthChartRepository;
-        public DepthChartServiceRemoveTests()
+        public DepthChartServiceGetBackupsTests()
         {
             _mockDepthChartRepository = new Mock<IDepthChartRepository>();
         }
@@ -34,48 +35,58 @@ namespace DepthChartPro.TESTS
                         Position = new Position { Code ="QB"},
                         Player = new Player { Number = 11 },
                         PositionDepth = 1
+                    },
+                    new PositionDepthQueue
+                    {
+                        Position = new Position { Code ="QB"},
+                        Player = new Player { Number = 2 },
+                        PositionDepth = 2
                     }
                 }
             };
         }
 
         [Fact]
-        public async Task When_remove_player_with_null_posion_Async()
+        public async Task When_get_backups_for_first_palyer_Async()
         {
             var depthChart = setupDepthChart();
             _mockDepthChartRepository.Setup(dc => dc.GetFullDepthChart()).ReturnsAsync(depthChart);
             var sut = new DepthChartService(_mockDepthChartRepository.Object);
-            var exception = await Record.ExceptionAsync(async () => await sut.AddPlayerToDepthChart(null, 12, 0));
-
-            _mockDepthChartRepository.Verify(dc => dc.RemovePlayerFromDepthChart(It.IsAny<int>()), Times.Never);
-            Assert.Equal(typeof(ArgumentNullException), exception.GetType());
-            Assert.Equal("Parameter is null or empty (Parameter 'position')", exception.Message);
+            var backups = await sut.GetBackups("QB", 12);
+            Assert.Equal(2, backups.Count());
+            Assert.Equal(11, backups.ToList()[0].Number);
+            Assert.Equal(2, backups.ToList()[1].Number);
         }
 
         [Fact]
-        public async Task When_remove_player_not_existsAsync()
+        public async Task When_get_backups_for_second_palyer_Async()
         {
             var depthChart = setupDepthChart();
             _mockDepthChartRepository.Setup(dc => dc.GetFullDepthChart()).ReturnsAsync(depthChart);
             var sut = new DepthChartService(_mockDepthChartRepository.Object);
-            var result = await sut.RemovePlayerFromDepthChart("QB", 2);
-
-            _mockDepthChartRepository.Verify(dc => dc.RemovePlayerFromDepthChart(It.IsAny<int>()), Times.Never);
-
-            Assert.Null(result);
+            var backups = await sut.GetBackups("QB", 11);
+            Assert.Equal(1, backups.Count());
+            Assert.Equal(2, backups.ToList()[0].Number);
         }
 
         [Fact]
-        public async Task When_remove_existing_playerAsync()
+        public async Task When_get_backups_for_last_palyer_Async()
         {
             var depthChart = setupDepthChart();
             _mockDepthChartRepository.Setup(dc => dc.GetFullDepthChart()).ReturnsAsync(depthChart);
             var sut = new DepthChartService(_mockDepthChartRepository.Object);
-            var result = await sut.RemovePlayerFromDepthChart("QB", 12);
+            var backups = await sut.GetBackups("QB", 2);
+            Assert.Empty(backups);
+        }
 
-            _mockDepthChartRepository.Verify(dc => dc.RemovePlayerFromDepthChart(0), Times.Once);
-
-            Assert.Equal(12,result.Number);
+        [Fact]
+        public async Task When_get_backups_for_non_existing_palyer_Async()
+        {
+            var depthChart = setupDepthChart();
+            _mockDepthChartRepository.Setup(dc => dc.GetFullDepthChart()).ReturnsAsync(depthChart);
+            var sut = new DepthChartService(_mockDepthChartRepository.Object);
+            var backups = await sut.GetBackups("QB", 1);
+            Assert.Empty(backups);
         }
     }
 }
