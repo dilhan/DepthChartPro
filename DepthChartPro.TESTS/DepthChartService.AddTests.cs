@@ -5,6 +5,7 @@ using Moq;
 using System.Threading.Tasks;
 using Xunit;
 using System.Collections.Generic;
+using System;
 
 namespace DepthChartPro.TESTS
 {
@@ -17,7 +18,19 @@ namespace DepthChartPro.TESTS
         }
 
         [Fact]
-        public async Task When_add_player_to_given_posionAsync()
+        public async Task When_add_player_with_null_posion_Async()
+        {
+            _mockDepthChartRepository.Setup(dc => dc.GetFullDepthChart()).ReturnsAsync(new DepthChart());
+            var sut = new DepthChartService(_mockDepthChartRepository.Object);
+            var exception = await Record.ExceptionAsync(async () => await sut.AddPlayerToDepthChart(null, 12, 0));
+
+            _mockDepthChartRepository.Verify(dc => dc.AddPlayerToDepthChart("QB", 12, 0), Times.Never);
+            Assert.Equal(typeof(ArgumentNullException), exception.GetType());
+            Assert.Equal("Parameter is null or empty (Parameter 'position')", exception.Message);
+        }
+
+        [Fact]
+        public async Task When_add_player_to_given_posion_depth_Async()
         {
             _mockDepthChartRepository.Setup(dc => dc.GetFullDepthChart()).ReturnsAsync(new DepthChart());
             var sut = new DepthChartService(_mockDepthChartRepository.Object);
@@ -27,7 +40,7 @@ namespace DepthChartPro.TESTS
         }
 
         [Fact]
-        public async Task When_add_player_to_existing_depth_chart_with_given_posionsAsync()
+        public async Task When_add_player_to_existing_depth_chart_with_given_posion_depth_Async()
         {
 
             var depthChart = new DepthChart
@@ -51,7 +64,7 @@ namespace DepthChartPro.TESTS
         }
 
         [Fact]
-        public async Task When_add_player_to_existing_depth_chart_without_position_should_add_to_lastAsync()
+        public async Task When_add_player_to_existing_depth_chart_without_posion_depth_should_add_to_last_Async()
         {
             var depthChart = new DepthChart
             {
@@ -80,7 +93,7 @@ namespace DepthChartPro.TESTS
         }
 
         [Fact]
-        public async Task When_add_player_to_existing_depth_chart_on_top_should_move_others_downAsync()
+        public async Task When_add_player_to_existing_depth_chart_on_top_should_move_others_down_Async()
         {
             var depthChart = new DepthChart
             {
