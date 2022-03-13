@@ -47,6 +47,18 @@ namespace DepthChartPro.TESTS
         }
 
         [Fact]
+        public async Task When_get_backups_with_null_posion_Async()
+        {
+            var depthChart = setupDepthChart();
+            _mockDepthChartRepository.Setup(dc => dc.GetFullDepthChart()).ReturnsAsync(depthChart);
+            var sut = new DepthChartService(_mockDepthChartRepository.Object);
+            var exception = await Record.ExceptionAsync(async () => await sut.GetBackups(null, 12)); 
+
+            Assert.Equal(typeof(ArgumentNullException), exception.GetType());
+            Assert.Equal("Parameter is null or empty (Parameter 'position')", exception.Message);
+        }
+
+        [Fact]
         public async Task When_get_backups_for_first_palyer_Async()
         {
             var depthChart = setupDepthChart();
