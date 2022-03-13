@@ -1,6 +1,6 @@
 # Depth Chart Pro API Service
 
-This document will guide you through the initial setup to get the `DepthChartPro` solution running.
+This document will guide you through the information about `DepthChartPro` solution.
 
 ### Prerequisite
 - .NET 6.0
@@ -8,4 +8,5 @@ This document will guide you through the initial setup to get the `DepthChartPro
 - Microsoft.EntityFrameworkCore.Tools
 - Newtonsoft.Json
 - xunit
+- Moq
 
