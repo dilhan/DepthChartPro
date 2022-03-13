@@ -22,19 +22,17 @@ namespace DepthChartPro.BL.Services
                 throw new System.ArgumentNullException("position", "Parameter is null or empty");
 
             var depthChart = await GetFullDepthChart();
-            if (positionDepth == null && depthChart.PositionDepthQueueList.Any(pq => pq.Position.Code == position))
+            if (positionDepth == null && depthChart.PositionDepthQueueList.Any(pq => pq.Position.Code == position)) 
             {
                 var lastpositionDepth = depthChart.PositionDepthQueueList.FindLast(dc => dc.Position.Code == position).PositionDepth + 1;
                 await _depthChartRepository.AddPlayerToDepthChart(position, playerId, lastpositionDepth);
                 return;
             }
             var posDepth = (int)positionDepth;
-            if (depthChart.PositionDepthQueueList.FindAll(dc => dc.Position.Code == position && dc.PositionDepth == posDepth).Count > 0)
+            var greaterPostions = depthChart.PositionDepthQueueList.FindAll(dc => dc.Position.Code == position && dc.PositionDepth >= posDepth);
+            foreach (var depthChartItem in greaterPostions)
             {
-                foreach (var depthChartItem in depthChart.PositionDepthQueueList.FindAll(dc => dc.Position.Code == position && dc.PositionDepth >= posDepth))
-                {
-                    depthChartItem.PositionDepth++;
-                }
+                depthChartItem.PositionDepth++;
             }
             await _depthChartRepository.AddPlayerToDepthChart(position, playerId, posDepth);
         }
